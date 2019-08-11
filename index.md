@@ -6,7 +6,7 @@ El término __Micro Frontends__ apareció por primera vez en [ThoughtWorks Techn
 
 La idea detrás de Micro Frontends es pensar en un sitio web o aplicación web como __una composición de características__ que son propiedad de __equipos independientes__. Cada equipo tiene un __área de negocio definida__ o __misión__ de la que se preocupa y se especializa. Un equipo es __cross funcional__ y desarrolla sus características __end-to-end__, desde la base de datos hasta la interfaz de usuario.
 
-Sin embargo, esta idea no es nueva, en el pasado se llamaba [Integración de Frontend para Sistemas Verticalizados](https://dev.otto.de/2014/07/29/scaling-with-microservices-and-vertical -decomposición /) o [Sistemas autocontenidos](http://scs-architecture.org/). Pero Micro Frontends es claramente un término más amigable y menos voluminoso.
+Sin embargo, esta idea no es nueva, en el pasado se llamaba [Integración de Frontend para Sistemas Verticalizados](https://dev.otto.de/2014/07/29/scaling-with-microservices-and-vertical-decomposition/) o [Sistemas autocontenidos](http://scs-architecture.org/). Pero Micro Frontends es claramente un término más amigable y menos voluminoso.
 
 __Frontends monolíticos__
 ![Fases monolíticas](./ressources/diagrams/organisational/monolith-frontback-microservices.png)
@@ -27,11 +27,11 @@ Cuando la interfaz de usuario tiene que proporcionar __información instantánea
 
 ## Ideas centrales detrás de las micro frontend
 
-* __Se Agnostico a la Tecnologia__<br>Cada equipo debe poder elegir y actualizar su stack sin tener que coordinar con otros equipos. Los [Custom Elements](# the-dom-is-the-api) son una excelente manera de ocultar los detalles de la implementación mientras se proporciona una interfaz neutral a otros.
+* __Se Agnostico a la Tecnologia__<br>Cada equipo debe poder elegir y actualizar su stack sin tener que coordinar con otros equipos. Los [Custom Elements](#el-dom-es-la-api) son una excelente manera de ocultar los detalles de la implementación mientras se proporciona una interfaz neutral a otros.
 * __Aislar el código del equipo__<br> No compartir tiempo de ejecución, incluso si todos los equipos usan el mismo framework. Crea aplicaciones independientes que sean autónomas. No hay que confar en estado compartido o variables globales.
 * __Establecer prefijos de equipo__<br>Acordar los espacions de nombres no aislados. Espacio de nombres CSS, eventos, almacenamiento local y cookies para evitar colisiones y dejar clara la propiedad.
-* __Favorece las funciones nativas del navegador sobre las API personalizadas__<br>Utilizar [Eventos de navegador para la comunicación](#parent-child-communication--dom-modification) en lugar de crear un sistema global PubSub. Si realmente tiene que crear una API de varios equipos, intente que sea lo más simple posible.
-* __Construir un sitio resiliente__<br>Su función debería ser útil, incluso si JavaScript falla o no se ha ejecutado todavía. Utilizar [Universal Rendering](#serverside-rendering--universal-rendering) y Progressive Enhancement para mejorar el rendimiento percibido.
+* __Favorece las funciones nativas del navegador sobre las API personalizadas__<br>Utilizar [Eventos de navegador para la comunicación](#comunicación-padre-hijo--modificación-de-dom) en lugar de crear un sistema global PubSub. Si realmente tiene que crear una API de varios equipos, intente que sea lo más simple posible.
+* __Construir un sitio resiliente__<br>Su función debería ser útil, incluso si JavaScript falla o no se ha ejecutado todavía. Utilizar [Universal Rendering](#renderizad-en-servidor--renderizado-universal) y Progressive Enhancement para mejorar el rendimiento percibido.
 
 ---
 
@@ -41,7 +41,7 @@ Cuando la interfaz de usuario tiene que proporcionar __información instantánea
 
 Pero los custom elements por sí solos no son la solución a todas nuestras necesidades. Para abordar la mejora progresiva, renderizado universal o el routing, necesitamos piezas de software adicionales.
 
-Esta página está dividida en dos áreas principales. Primero, analizaremos [Composición de la página](#page-composition): cómo ensamblar una página con componentes que pertenecen a diferentes equipos. Después mostraremos ejemplos para implementar el lado de cliente [Transición de página](#page-transition).
+Esta página está dividida en dos áreas principales. Primero, analizaremos [Composición de la página](#composición-de-la-página): cómo ensamblar una página con componentes que pertenecen a diferentes equipos. Después mostraremos ejemplos para implementar el lado de cliente [Transición de página](#page-transition).
 
 ## Composición de la página
 
@@ -55,7 +55,7 @@ Cuenta con un __selector__ para cambiar entre los tres modelos diferentes de tra
 
 [![Examplo 0 - Página del producto - Plain JS](./ressources/video/model-store-0.gif)](./0-model-store/)
 
-[probar en navegador](./ 0-model-store /) & [inspeccionar código](https://github.com/neuland/micro-frontends/tree/master/0-model-store)
+[probar en navegador](./0-model-store/) & [inspeccionar código](https://github.com/neuland/micro-frontends/tree/master/0-model-store)
 
 Todo el HTML se genera en el lado del cliente utilizando __JavaScript__ y Template Strings ES6 __sin dependencias__. El código separa estado de maquetacion y vuelve a renderizar todo el lado del cliente HTML en cada cambio, sin DOM extraño ni __renderizado universal__ por ahora. Tampoco __separación por equipo__ - [código] https://github.com/neuland/micro-frontends/tree/master/0-model-store) está escrito en un archivo js/css.
 
