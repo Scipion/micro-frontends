@@ -1,0 +1,12 @@
+theme: jekyll-theme-architect
+show_downloads: false
+title: Micro Frontends
+description: Extendiendo la idea de microservicio al desarrollo frontend
+github:
+  is_project_page: true
+  repository_url: https://github.com/scipion/micro-frontends
+google_analytics: 
+exclude:
+  - 2-composition-universal
+  - 3-data-fetching
+  - node_modules

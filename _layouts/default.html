@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "es-ES" }}">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>{{ site.title }} - {{ site.description }}</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="canonical" href="https://micro-frontends.org/" />
+    <link rel="alternate" hreflang="ja" href="https://micro-frontends-japanese.org/" />
+    <link rel="alternate" hreflang="es" href="https://micro-frontends-es.org/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://micro-frontends.org/" />
+    <meta property="og:image" content="/ressources/screen/three-teams.png" />
+    <meta property="og:site_name" content="Micro Frontends" />
+    <meta property="og:description" content="Techniques, strategies and recipes for building a modern web app with multiple teams using different JavaScript frameworks." />
+    <link href='https://fonts.googleapis.com/css?family=Handlee&font-display=swap' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}" media="screen" type="text/css">
+    <link rel="stylesheet" href="{{ '/assets/css/print.css' | relative_url }}" media="print" type="text/css">
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <a href="{{ '/' | absolute_url }}">
+          <h1>{{ site.title }}</h1>
+        </a>
+        <h2>{{ site.description | default: site.github.project_tagline }}</h2>
+        {% if site.github.is_project_page %}
+          <a href="{{ site.github.repository_url }}" class="button"><small>View project on</small> GitHub</a>
+        {% endif %}
+        {% if site.github.is_user_page %}
+          <a href="{{ site.github.repository_url }}" class="button"><small>Follow me on</small> GitHub</a>
+        {% endif %}
+        <div class="languages">
+          <a href="https://micro-frontends.org/">En</a>
+          <a href="https://micro-frontends-japanese.org/">JP</a>
+          <strong>ES</strong>
+        </div>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          {{ content }}
+        </section>
+      </div>
+    </div>
+
+    {% if site.google_analytics %}
+      <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', '{{ site.google_analytics }}', 'auto');
+        ga('send', 'pageview');
+      </script>
+    {% endif %}
+  </body>
+</html>
