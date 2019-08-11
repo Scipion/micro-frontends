@@ -368,7 +368,7 @@ Puede ver el [Repo en Github](https://github.com/neuland/micro-frontends) para m
   - ...
 
 ## Autor
-** Michael Geers ** ([@naltatis] (https://twitter.com/naltatis)) es ingeniero de software en [neuland Büro für Informatik] (https://www.neuland-bfi.de/) y trabaja en la construcción de frontends agradables para e-commerce.
+**Michael Geers** ([@naltatis](https://twitter.com/naltatis)) es ingeniero de software en [neuland Büro für Informatik](https://www.neuland-bfi.de/) y trabaja en la construcción de frontends agradables para e-commerce.
 
 ## Colaboradores
 - [Jorge Beltrán](https://github.com/scipion) colaborador traducción y correcciones a [Español](https://micro-frontends-es.org).
