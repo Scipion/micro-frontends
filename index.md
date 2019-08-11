@@ -9,11 +9,11 @@ La idea detrás de Micro Frontends es pensar en un sitio web o aplicación web c
 Sin embargo, esta idea no es nueva, en el pasado se llamaba [Integración de Frontend para Sistemas Verticalizados](https://dev.otto.de/2014/07/29/scaling-with-microservices-and-vertical -decomposición /) o [Sistemas autocontenidos](http://scs-architecture.org/). Pero Micro Frontends es claramente un término más amigable y menos voluminoso.
 
 __Frontends monolíticos__
-![Fases monolíticas](./ressources/diagrams/organisation/monolith-frontback-microservices.png)
+![Fases monolíticas](./ressources/diagrams/organisational/monolith-frontback-microservices.png)
 
 
 __Organización vertical__
-![Equipos de extremo a extremo con Micro Frontends](./ressources/diagrams/organisation/verticals-headline.png)
+![Equipos de extremo a extremo con Micro Frontends](./ressources/diagrams/organisational/verticals-headline.png)
 
 ## ¿Qué es una aplicación web moderna?
 
