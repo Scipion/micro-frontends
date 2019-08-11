@@ -2,7 +2,8 @@
 **Extending the Microservice Paradigms to Web Development**
 
 Traducción al Español [micro-frontends-es.org](https://micro-frontends-es.org/).
-El sitio orgiginal puede verse en [micro-frontends.org](https://micro-frontends.org/).
+
+El sitio original puede verse en [micro-frontends.org](https://micro-frontends.org/).
 
 ## Author
 This is a translation by Jorge Beltrán from the original article by
