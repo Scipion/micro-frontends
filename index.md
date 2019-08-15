@@ -23,7 +23,7 @@ Para poner esto en una perspectiva más amplia, [Aral Balkan](https://ar.al/) ha
 
 Si tu proyecto se encuentra en el __lado izquierdo de este espectro__, una __integración en servidor web__ es una buena opción. Con este modelo, un servidor recopila y __concatena cadenas de HTML__ de todos los componentes que conforman la página solicitada por el usuario. Las actualizaciones se realizan recargando la página desde el servidor o reemplazando partes de ella a través de ajax. [Gustaf Nilsson Kotte](https://twitter.com/gustaf_nk/) ha escrito un [amplio artículo](https://gustafnk.github.io/microservice-websites/) sobre este tema.
 
-Cuando la interfaz de usuario tiene que proporcionar __información instantánea__, incluso en conexiones no estables, un sitio de servidor puro no es suficiente. Para implementar técnicas como [UI optimista](https://www.smashingmagazine.com/2016/11/true-lies-of-optimistic-user-interfaces/) o [Skeleton Screens](http: //www.lukew. com / ff / entry.asp? 1797) debe poder también __actualizar__ la UI __en el dispositivo en sí__. El término de Google [Progressive Web Apps](https://developers.google.com/web/progressive-web-apps/) describe adecuadamente el __balanceo__ entre ser un buen ciudadano de la web (mejora progresiva) y al mismo tiempo proporcionar rendimionto como en una app. Este tipo de aplicación se encuentra en algún lugar __sobre la mitad__. Aquí una solución basada únicamente en el servidor ya no es suficiente. Tenemos que movernos a la integración __en el navegador__, y ese es el enfoque de este artículo.
+Cuando la interfaz de usuario tiene que proporcionar __información instantánea__, incluso en conexiones no estables, un sitio de servidor puro no es suficiente. Para implementar técnicas como [UI optimista](https://www.smashingmagazine.com/2016/11/true-lies-of-optimistic-user-interfaces/) o [Skeleton Screens](http://www.lukew.com/ff/entry.asp?1797) debe poder también __actualizar__ la UI __en el dispositivo en sí__. El término de Google [Progressive Web Apps](https://developers.google.com/web/progressive-web-apps/) describe adecuadamente el __balanceo__ entre ser un buen ciudadano de la web (mejora progresiva) y al mismo tiempo proporcionar rendimionto como en una app. Este tipo de aplicación se encuentra en algún lugar __sobre la mitad__. Aquí una solución basada únicamente en el servidor ya no es suficiente. Tenemos que movernos a la integración __en el navegador__, y ese es el enfoque de este artículo.
 
 ## Ideas centrales detrás de las micro frontend
 
@@ -45,7 +45,7 @@ Esta página está dividida en dos áreas principales. Primero, analizaremos [Co
 
 ## Composición de la página
 
-Además de la integración __client__-__servidor__ del código escrito en __different frameworks__, hay muchos temas secundarios que deben ser discutidos: mecanismos para aislar js__, __evitar conflictos css__, __cargar recursos__ según sea necesario, __compartir recursos comunes__ entre equipos, manejar la __obtencion de datos__ y pensar sobre __estados de carga__ buenos para el usuario. Vamos a entrar en estos temas paso a paso.
+Además de la integración __client-servidor__ del código escrito en __different frameworks__, hay muchos temas secundarios que deben ser discutidos: mecanismos para __aislar js__, __evitar conflictos css__, __cargar recursos__ según sea necesario, __compartir recursos comunes__ entre equipos, manejar la __obtencion de datos__ y pensar sobre __estados de carga__ buenos para el usuario. Vamos a entrar en estos temas paso a paso.
 
 ### El prototipo base
 
