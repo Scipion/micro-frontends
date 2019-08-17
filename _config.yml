@@ -5,7 +5,7 @@ description: Extendiendo la idea de microservicio al desarrollo frontend
 github:
   is_project_page: true
   repository_url: https://github.com/scipion/micro-frontends
-google_analytics: 
+google_analytics: UA-145454462-1
 exclude:
   - 2-composition-universal
   - 3-data-fetching

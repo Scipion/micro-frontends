@@ -1,12 +1,12 @@
-Técnicas, estrategias y recetas para crear una __aplicación web moderna__ con __múltiples equipos__ que pueden __entregar fundionalidades independientemente__.
+Técnicas, estrategias y recetas para crear una __aplicación web moderna__ con __múltiples equipos__ que pueden __entregar funcionalidades independientemente__.
 
 ## ¿Qué son los micro frontend?
 
-El término __Micro Frontends__ apareció por primera vez en [ThoughtWorks Technology Radar](https://www.thoughtworks.com/radar/techniques/micro-frontends) a finales de 2016. Extiende los conceptos de los micro servicios al mundo del frontend. La tendencia actual es crear una aplicación de navegador potente y rica en características, también conocida como "single page app", que se asiente sobre una arquitectura de microservicio. Con el tiempo, la capa de frontend, a menudo desarrollada por un equipo independiente, crece y se vuelve más difícil de mantener. Eso es lo que llamamos un [Monolito de la interfaz](https://www.youtube.com/watch?v=pU1gXA0rfwc).
+El término __Micro Frontends__ apareció por primera vez en [ThoughtWorks Technology Radar](https://www.thoughtworks.com/radar/techniques/micro-frontends) a finales de 2016. Extiende los conceptos de los micro servicios al mundo del frontend. La tendencia actual es crear una aplicación de navegador potente y rica en características, también conocida como "single page app", que se asiente sobre una arquitectura de microservicio. Con el tiempo, la capa de frontend, a menudo desarrollada por un equipo independiente, crece y se vuelve más difícil de mantener. Eso es lo que llamamos una [Interfaz Monolítica](https://www.youtube.com/watch?v=pU1gXA0rfwc).
 
-La idea detrás de Micro Frontends es pensar en un sitio web o aplicación web como __una composición de características__ que son propiedad de __equipos independientes__. Cada equipo tiene un __área de negocio definida__ o __misión__ de la que se preocupa y se especializa. Un equipo es __cross funcional__ y desarrolla sus características __end-to-end__, desde la base de datos hasta la interfaz de usuario.
+La idea detrás de Micro Frontends es pensar en un sitio web o aplicación web como __una composición de características__ que son propiedad de __equipos independientes__. Cada equipo tiene un __área de negocio definida__ o __misión__ de la que se preocupa y se especializa. Un equipo es __cross functional__ y desarrolla sus características __end-to-end__, desde la base de datos hasta la interfaz de usuario.
 
-Sin embargo, esta idea no es nueva, en el pasado se llamaba [Integración de Frontend para Sistemas Verticalizados](https://dev.otto.de/2014/07/29/scaling-with-microservices-and-vertical-decomposition/) o [Sistemas autocontenidos](http://scs-architecture.org/). Pero Micro Frontends es claramente un término más amigable y menos voluminoso.
+Sin embargo, esta idea no es nueva, en el pasado se llamaba [Integración de Frontend para Sistemas Verticales](https://dev.otto.de/2014/07/29/scaling-with-microservices-and-vertical-decomposition/) o [Sistemas autocontenidos](http://scs-architecture.org/). Pero Micro Frontends es claramente un término más amigable y menos voluminoso.
 
 __Frontends monolíticos__
 ![Fases monolíticas](./ressources/diagrams/organisational/monolith-frontback-microservices.png)
@@ -45,7 +45,7 @@ Esta página está dividida en dos áreas principales. Primero, analizaremos [Co
 
 ## Composición de la página
 
-Además de la integración __client-servidor__ del código escrito en __different frameworks__, hay muchos temas secundarios que deben ser discutidos: mecanismos para __aislar js__, __evitar conflictos css__, __cargar recursos__ según sea necesario, __compartir recursos comunes__ entre equipos, manejar la __obtencion de datos__ y pensar sobre __estados de carga__ buenos para el usuario. Vamos a entrar en estos temas paso a paso.
+Además de la integración __client-servidor__ del código escrito con __diferentes frameworks__, hay muchos temas secundarios que deben ser discutidos: mecanismos para __aislar js__, __evitar conflictos css__, __cargar recursos__ según sea necesario, __compartir recursos comunes__ entre equipos, manejar la __obtencion de datos__ y pensar sobre __estados de carga__ buenos para el usuario. Vamos a entrar en estos temas paso a paso.
 
 ### El prototipo base
 
