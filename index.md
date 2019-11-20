@@ -27,7 +27,7 @@ Cuando la interfaz de usuario tiene que proporcionar __información instantánea
 
 ## Ideas centrales detrás de las micro frontend
 
-* __Se Agnostico a la Tecnologia__<br>Cada equipo debe poder elegir y actualizar su stack sin tener que coordinar con otros equipos. Los [Custom Elements](#el-dom-es-la-api) son una excelente manera de ocultar los detalles de la implementación mientras se proporciona una interfaz neutral a otros.
+* __Sé Agnostico a la Tecnologia__<br>Cada equipo debe poder elegir y actualizar su stack sin tener que coordinar con otros equipos. Los [Custom Elements](#el-dom-es-la-api) son una excelente manera de ocultar los detalles de la implementación mientras se proporciona una interfaz neutral a otros.
 * __Aislar el código del equipo__<br> No compartir tiempo de ejecución, incluso si todos los equipos usan el mismo framework. Crea aplicaciones independientes que sean autónomas. No hay que confar en estado compartido o variables globales.
 * __Establecer prefijos de equipo__<br>Acordar los espacions de nombres no aislados. Espacio de nombres CSS, eventos, almacenamiento local y cookies para evitar colisiones y dejar clara la propiedad.
 * __Favorece las funciones nativas del navegador sobre las API personalizadas__<br>Utilizar [Eventos de navegador para la comunicación](#comunicación-padre-hijo--modificación-de-dom) en lugar de crear un sistema global PubSub. Si realmente tiene que crear una API de varios equipos, intente que sea lo más simple posible.
