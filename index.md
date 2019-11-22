@@ -23,13 +23,13 @@ Para poner esto en una perspectiva más amplia, [Aral Balkan](https://ar.al/) ha
 
 Si tu proyecto se encuentra en el __lado izquierdo de este espectro__, una __integración en servidor web__ es una buena opción. Con este modelo, un servidor recopila y __concatena cadenas de HTML__ de todos los componentes que conforman la página solicitada por el usuario. Las actualizaciones se realizan recargando la página desde el servidor o reemplazando partes de ella a través de ajax. [Gustaf Nilsson Kotte](https://twitter.com/gustaf_nk/) ha escrito un [amplio artículo](https://gustafnk.github.io/microservice-websites/) sobre este tema.
 
-Cuando la interfaz de usuario tiene que proporcionar __información instantánea__, incluso en conexiones no estables, un sitio de servidor puro no es suficiente. Para implementar técnicas como [UI optimista](https://www.smashingmagazine.com/2016/11/true-lies-of-optimistic-user-interfaces/) o [Skeleton Screens](http://www.lukew.com/ff/entry.asp?1797) debe poder también __actualizar__ la UI __en el dispositivo en sí__. El término de Google [Progressive Web Apps](https://developers.google.com/web/progressive-web-apps/) describe adecuadamente el __balanceo__ entre ser un buen ciudadano de la web (mejora progresiva) y al mismo tiempo proporcionar rendimionto como en una app. Este tipo de aplicación se encuentra en algún lugar __sobre la mitad__. Aquí una solución basada únicamente en el servidor ya no es suficiente. Tenemos que movernos a la integración __en el navegador__, y ese es el enfoque de este artículo.
+Cuando la interfaz de usuario tiene que proporcionar __información instantánea__, incluso en conexiones no estables, un sitio de servidor puro no es suficiente. Para implementar técnicas como [UI optimista](https://www.smashingmagazine.com/2016/11/true-lies-of-optimistic-user-interfaces/) o [Skeleton Screens](http://www.lukew.com/ff/entry.asp?1797) debe poder también __actualizar__ la UI __en el dispositivo en sí__. El término de Google [Progressive Web Apps](https://developers.google.com/web/progressive-web-apps/) describe adecuadamente el __balanceo__ entre ser un buen ciudadano de la web (mejora progresiva) y al mismo tiempo proporcionar rendimiento como en una app. Este tipo de aplicación se encuentra en algún lugar __sobre la mitad__. Aquí una solución basada únicamente en el servidor ya no es suficiente. Tenemos que movernos a la integración __en el navegador__, y ese es el enfoque de este artículo.
 
 ## Ideas centrales detrás de las micro frontend
 
-* __Se Agnostico a la Tecnologia__<br>Cada equipo debe poder elegir y actualizar su stack sin tener que coordinar con otros equipos. Los [Custom Elements](#el-dom-es-la-api) son una excelente manera de ocultar los detalles de la implementación mientras se proporciona una interfaz neutral a otros.
-* __Aislar el código del equipo__<br> No compartir tiempo de ejecución, incluso si todos los equipos usan el mismo framework. Crea aplicaciones independientes que sean autónomas. No hay que confar en estado compartido o variables globales.
-* __Establecer prefijos de equipo__<br>Acordar los espacions de nombres no aislados. Espacio de nombres CSS, eventos, almacenamiento local y cookies para evitar colisiones y dejar clara la propiedad.
+* __Sé Agnóstico a la Tecnología__<br>Cada equipo debe poder elegir y actualizar su stack sin tener que coordinar con otros equipos. Los [Custom Elements](#el-dom-es-la-api) son una excelente manera de ocultar los detalles de la implementación mientras se proporciona una interfaz neutral a otros.
+* __Aislar el código del equipo__<br> No compartir tiempo de ejecución, incluso si todos los equipos usan el mismo framework. Crea aplicaciones independientes que sean autónomas. No hay que confiar en estado compartido o variables globales.
+* __Establecer prefijos de equipo__<br>Acordar los espacios de nombres no aislados. Espacio de nombres CSS, eventos, almacenamiento local y cookies para evitar colisiones y dejar clara la propiedad.
 * __Favorece las funciones nativas del navegador sobre las API personalizadas__<br>Utilizar [Eventos de navegador para la comunicación](#comunicación-padre-hijo--modificación-de-dom) en lugar de crear un sistema global PubSub. Si realmente tiene que crear una API de varios equipos, intente que sea lo más simple posible.
 * __Construir un sitio resiliente__<br>Su función debería ser útil, incluso si JavaScript falla o no se ha ejecutado todavía. Utilizar [Universal Rendering](#renderizad-en-servidor--renderizado-universal) y Progressive Enhancement para mejorar el rendimiento percibido.
 
@@ -45,7 +45,7 @@ Esta página está dividida en dos áreas principales. Primero, analizaremos [Co
 
 ## Composición de la página
 
-Además de la integración __client-servidor__ del código escrito con __diferentes frameworks__, hay muchos temas secundarios que deben ser discutidos: mecanismos para __aislar js__, __evitar conflictos css__, __cargar recursos__ según sea necesario, __compartir recursos comunes__ entre equipos, manejar la __obtencion de datos__ y pensar sobre __estados de carga__ buenos para el usuario. Vamos a entrar en estos temas paso a paso.
+Además de la integración __cliente-servidor__ del código escrito con __diferentes frameworks__, hay muchos temas secundarios que deben ser discutidos: mecanismos para __aislar js__, __evitar conflictos css__, __cargar recursos__ según sea necesario, __compartir recursos comunes__ entre equipos, manejar la __obtención de datos__ y pensar sobre __estados de carga__ buenos para el usuario. Vamos a entrar en estos temas paso a paso.
 
 ### El prototipo base
 
@@ -61,7 +61,7 @@ Todo el HTML se genera en el lado del cliente utilizando __JavaScript__ y Templa
 
 ### Integración del lado del cliente
 
-En este ejemplo, la página se divide en componentes/fragmentos separados que pertenecen a tres equipos. __Team Checkout__ (azul) ahora es responsable de todo lo relacionado con el proceso de compra, es decir, __boton de compra__ y __minicesta__. __Team Inspire__ (verde) administra las __recomendaciones de producto__ en esta página. La página en sí es propiedad de __Team Product__ (rojo).
+En este ejemplo, la página se divide en componentes/fragmentos separados que pertenecen a tres equipos. __Team Checkout__ (azul) ahora es responsable de todo lo relacionado con el proceso de compra, es decir, __botón de compra__ y __minicesta__. __Team Inspire__ (verde) administra las __recomendaciones de producto__ en esta página. La página en sí es propiedad de __Team Product__ (rojo).
 
 [![Ejemplo 1 - Página del producto - Composición](./ressources/screen/three-teams.png)](./1-composition-client-only/)
 
@@ -71,7 +71,7 @@ __El equipo de producto__(rojo) decide qué funcionalidad se incluye y dónde se
 
 ### ¿Cómo crear un Custom Element?
 
-Tomemos el __boton de compra__ como ejemplo. El equipo de producto incluye el botón simplemente agregando `<blue-buy sku="t_porsche"></blue-buy>` en la posición deseada en la maquetación. Para que esto funcione, Team Checkout debe registrar el elemento `blue-buy` en la página.
+Tomemos el __botón de compra__ como ejemplo. El equipo de producto incluye el botón simplemente agregando `<blue-buy sku="t_porsche"></blue-buy>` en la posición deseada en la maquetación. Para que esto funcione, Team Checkout debe registrar el elemento `blue-buy` en la página.
 
     class BlueBuy extends HTMLElement {
       constructor() {
@@ -138,7 +138,7 @@ Para evitar la duplicidad, se introduce un método `render()` que se llama desde
 
 ### Soporte en navegador
 
-El ejemplo anterior utiliza la especificación Custom Element V1 que actualmente está [soportada en Chrome, Safari y Opera](http://caniuse.com/#feat=custom-elementsv1). Pero con [document-register-element](https://github.com/WebReflection/document-register-element) hay disponible un polyfill ligero y probado en la batalla para que  funcione en todos los navegadores. Bajo el capó, utiliza la API de Mutation Observer [ampliamente soportada](http://caniuse.com/#feat=mutationobserver), por lo que no hay operaciónes raras en árbol del DOM en segundo plano.
+El ejemplo anterior utiliza la especificación Custom Element V1 que actualmente está [soportada en Chrome, Safari y Opera](http://caniuse.com/#feat=custom-elementsv1). Pero con [document-register-element](https://github.com/WebReflection/document-register-element) hay disponible un polyfill ligero y probado en la batalla para que  funcione en todos los navegadores. Bajo el capó, utiliza la API de Mutation Observer [ampliamente soportada](http://caniuse.com/#feat=mutationobserver), por lo que no hay operaciones raras en árbol del DOM en segundo plano.
 
 ### Framework de Compatibilidad
 
@@ -197,7 +197,7 @@ Con este enfoque el fragmento de la mini cesta agrega un oyente a un elemento DO
       $('blue-basket')[0].refresh();
     });
 
-Llamarda imperativa a los métodos DOM es bastante poco común, pero se puede encontrar en [video element api](https://developer.mozilla.org/de/docs/Web/HTML/Using_HTML5_audio_and_video#Controlling_media_playback) por ejemplo. Si es posible se debería hacer uso de un enfoque declarativo (cambio de atributo).
+Llamada imperativa a los métodos DOM es bastante poco común, pero se puede encontrar en [video element api](https://developer.mozilla.org/de/docs/Web/HTML/Using_HTML5_audio_and_video#Controlling_media_playback) por ejemplo. Si es posible se debería hacer uso de un enfoque declarativo (cambio de atributo).
 
 ## Renderizado en servidor / Renderizado Universal
 
@@ -256,7 +256,7 @@ Esta animación muestra la tienda de tractores en un navegador que tiene __JavaS
 
 [ver el código](https://github.com/neuland/micro-frontends/tree/master/2-composition-universal)
 
-Los botones de selección ahora son enlaces reales y cada click prouce una recarga de la página. El terminal a la derecha ilustra el proceso de cómo una solicitud de una página se enruta al equipo rojo, que controla la página de producto y luego el marcado se complementa con los fragmentos del equipo azul y verde.
+Los botones de selección ahora son enlaces reales y cada click produce una recarga de la página. El terminal a la derecha ilustra el proceso de cómo una solicitud de una página se enruta al equipo rojo, que controla la página de producto y luego el marcado se complementa con los fragmentos del equipo azul y verde.
 
 Al volver a activar JavaScript, solo estarán visibles los mensajes llamadas al servidor para la primera solicitud. Todos los cambios posteriores se manejan del lado del cliente, como en el primer ejemplo. En un ejemplo posterior, los datos del producto se extraerán del JavaScript y se cargarán a través de una API REST según sea necesario.
 
@@ -302,7 +302,7 @@ Se hace la llamada al API para obtener la recomendación personalizada.
 El HTML de la recomendación se renderiza y se solicitan las imágenes asociadas.
 El fragmento ahora necesita más espacio y empuja el diseño de la página.
 
-Hay diferentes opciones para evitar un rflow molesto como este.
+Hay diferentes opciones para evitar un reflow molesto como éste.
 El equipo rojo, que controla la página, podría __fijar la altura de los contenedores de recomendación__.
 En un sitio web responsive a menudo es difícil determinar la altura, ya que podría diferir para diferentes tamaños de pantalla.
 Pero el problema más importante es que __este tipo de acuerdo entre equipos crea un fuerte acoplamiento__ entre el equipo rojo y verde.
@@ -338,15 +338,15 @@ Puede ver el [Repo en Github](https://github.com/neuland/micro-frontends) para m
 - [Charla: Micro Frontends - Web Rebels, Oslo 2018](https://www.youtube.com/watch?v=dTW7eJsIHDg) ([Slides](https://noti.st/naltatis/HxcUfZ/micro-frontends-think-smaller-avoid-the-monolith-love-the-backend))
 - [Slides: Micro Frontends - JSUnconf.eu 2017](https://speakerdeck.com/naltatis/micro-frontends-building-a-modern-webapp-with-multiple-teams)
 - [Charla: Break Up With Your Frontend Monolith - JS Kongress 2017](https://www.youtube.com/watch?v=W3_8sxUurzA) Elisabeth Engel habla sobre implementacion de Micro Frontends en gutefrage.net
-- [Post: Micro frontends - a microservice approach to front-end web development](https://medium.com/@tomsoderlund/micro-frontends-a-microservice-approach-to-front-end-web-development-f325ebdadc16) Tom Söderlund explica el concepto y provee enlacies sobre este tema.
-- [Post: Microservices to Micro-Frontends](http://www.agilechamps.com/microservices-to-micro-frontends/) Sandeep Jain resume los pricipios clave detras de los microservicios y micro frontends
+- [Post: Micro frontends - a microservice approach to front-end web development](https://medium.com/@tomsoderlund/micro-frontends-a-microservice-approach-to-front-end-web-development-f325ebdadc16) Tom Söderlund explica el concepto y provee enlaces sobre este tema.
+- [Post: Microservices to Micro-Frontends](http://www.agilechamps.com/microservices-to-micro-frontends/) Sandeep Jain resume los pricipios clave detrás de los microservicios y micro frontends
 - [Link Collection: Micro Frontends by Elisabeth Engel](https://micro-frontends.zeef.com/elisabeth.engel?ref=elisabeth.engel&share=ee53d51a914b4951ae5c94ece97642fc) extensa lista de posts, charlas, herramientas y otros recursos sobre este tema.
-- [Awesome Micro Frontends](https://github.com/ChristianUlbrich/awesome-microfrontends) una lista filtrada de en laces por Christian Ulbrich 🕶
-- [Custom Elements Everywhere](https://custom-elements-everywhere.com/) Comprueba como frameworks y custom elements pueden ser amigos.
-- Los tractores se pueden comprar en [manufactum.com](https://www.manufactum.com/) :)<br>_Esta tiende esta desarrollada por dos equipos usando las técnicas aquí descritas._
+- [Awesome Micro Frontends](https://github.com/ChristianUlbrich/awesome-microfrontends) una lista filtrada de enlaces por Christian Ulbrich 🕶
+- [Custom Elements Everywhere](https://custom-elements-everywhere.com/) Comprueba cómo frameworks y custom elements pueden ser amigos.
+- Los tractores se pueden comprar en [manufactum.com](https://www.manufactum.com/) :)<br>_Esta tienda está desarrollada por dos equipos usando las técnicas aquí descritas._
 
 ## Técnicas relacionadas
-- [Posts: Cookie Cutter Scaling](https://paulhammant.com/categories.html#Cookie_Cutter_Scaling) David Hammet escribe una serie de articulos en blog sobre este tema.
+- [Posts: Cookie Cutter Scaling](https://paulhammant.com/categories.html#Cookie_Cutter_Scaling) David Hammet escribe una serie de artículos en blog sobre este tema.
 - [Wikipedia: Java Portlet Specification](https://en.wikipedia.org/wiki/Java_Portlet_Specification) Especificación que trata temas similares para crear portales empresariales.
 
 ---
@@ -356,7 +356,7 @@ Puede ver el [Repo en Github](https://github.com/neuland/micro-frontends) para m
 - Casos de uso
   - Navegación entre páginas
     - Navegación suave vs navegación dura
-    - Ruter universal
+    - Router universal
   - ...
 - Temas secundarios
   - CSS aislado / Interfaz de usuario coherente / Guías de estilo y bibliotecas de patrones
