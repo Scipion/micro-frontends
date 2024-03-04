@@ -378,6 +378,7 @@ Puede ver el [Repo en Github](https://github.com/neuland/micro-frontends) para m
 
 ## Colaboradores
 - [Jorge Beltrán](https://github.com/scipion) colaborador traducción y correcciones a [Español](https://micro-frontends-es.org).
+- [Rodrigo Medina](https://github.com/roeeyn) correcciones a [Español](https://micro-frontends-es.org).
 - [Koike Takayuki](https://github.com/koiketakayuki) quien tradujo el sitio a [Japonés](https://micro-frontends-japanese.org/).
 - [Bruno Carneiro](https://github.com/Tautorn) quien tradujo el sitio al [portugués](https://tauton.github.io/micro-frontends/).
 - [Soobin Bak](https://github.com/soobing) quien tradujo el sitio al [coreano](https://soobing.github.io/micro-frontends/).
