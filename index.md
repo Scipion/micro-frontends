@@ -6,14 +6,14 @@ El término __Micro Frontends__ apareció por primera vez en [ThoughtWorks Techn
 
 La idea detrás de Micro Frontends es pensar en un sitio web o aplicación web como __una composición de características__ que son propiedad de __equipos independientes__. Cada equipo tiene un __área de negocio definida__ o __misión__ de la que se preocupa y se especializa. Un equipo es __cross functional__ y desarrolla sus características __end-to-end__, desde la base de datos hasta la interfaz de usuario.
 
-Sin embargo, esta idea no es nueva, en el pasado se llamaba [Integración de Frontend para Sistemas Verticales](https://dev.otto.de/2014/07/29/scaling-with-microservices-and-vertical-decomposition/) o [Sistemas autocontenidos](http://scs-architecture.org/). Pero Micro Frontends es claramente un término más amigable y menos voluminoso.
+Sin embargo, esta idea no es nueva. Tiene mucho en comun con el concepto de [Sistemas autocontenidos](http://scs-architecture.org/). En el pasado se llamaba [Integración de Frontend para Sistemas Verticales](https://www.otto.de/jobs/en/technology/techblog/blogpost/architecture-principles-2013-04-15.php). Pero Micro Frontends es claramente un término más amigable y menos voluminoso.
 
 __Frontends monolíticos__
-![Fases monolíticas](./ressources/diagrams/organisational/monolith-frontback-microservices.png)
+<img alt="Frontends monolíticos" src="./ressources/diagrams/organisational/monolith-frontback-microservices.png" loading="lazy" />
 
 
 __Organización vertical__
-![Equipos de extremo a extremo con Micro Frontends](./ressources/diagrams/organisational/verticals-headline.png)
+<img alt="Equipos End-To-End con Micro Frontends" src="./ressources/diagrams/organisational/verticals-headline.png" loading="lazy" />
 
 ## ¿Qué es una aplicación web moderna?
 
@@ -74,17 +74,17 @@ __El equipo de producto__(rojo) decide qué funcionalidad se incluye y dónde se
 Tomemos el __botón de compra__ como ejemplo. El equipo de producto incluye el botón simplemente agregando `<blue-buy sku="t_porsche"></blue-buy>` en la posición deseada en la maquetación. Para que esto funcione, Team Checkout debe registrar el elemento `blue-buy` en la página.
 
     class BlueBuy extends HTMLElement {
-      constructor() {
-        super();
+      connectedCallback() {
         this.innerHTML = `<button type="button">buy for 66,00 €</button>`;
       }
+
       disconnectedCallback() { ... }
     }
     window.customElements.define('blue-buy', BlueBuy);
 
-Ahora, cada vez que el navegador encuentra una nueva etiqueta `blue-buy`, se llama al constructor. `this` es la referencia al nodo DOM raíz del Custom Element. Se pueden usar todas las propiedades y métodos de un elemento DOM estándar como `innerHTML` o `getAttribute()`.
+Ahora, cada vez que el navegador encuentra una nueva etiqueta `blue-buy`, el método `connectedCallback` es llamado. `this` es la referencia al nodo DOM raíz del Custom Element. Se pueden usar todas las propiedades y métodos de un elemento DOM estándar como `innerHTML` o `getAttribute()`.
 
-![Custom Elements en acción](./ressources/video/custom-element.gif)
+<img alt="Custom Elements en acción" src="./ressources/video/custom-element.gif" loading="lazy" />
 
 Al nombrar tu elemento, el único requisito que define la especificación es que el nombre debe __incluir un guión (-)__ para mantener la compatibilidad con las nuevas etiquetas HTML. En los siguientes ejemplos, se utiliza la convención de nombres `[color]-[característica]`. El espacio de nombres del equipo protege contra las colisiones y, de esta manera, el propietario de una característica se vuelve obvio, simplemente mirando el DOM.
 
@@ -96,7 +96,7 @@ Cuando el usuario selecciona otro tractor en el __selector__, el __botón compra
     // => <blue-buy sku="t_porsche">...</blue-buy>
     container.innerHTML = '<blue-buy sku="t_fendt"></blue-buy>';
 
-El `disconnectedCallback` del antiguo elemento se invoca de forma sincrónica para proporcionar al elemento la posibilidad de limpiar cosas como los event listeners. Después de eso, se llama al `constructor` del elemento` t_fendt` recién creado.
+El `disconnectedCallback` del antiguo elemento se invoca de forma sincrónica para proporcionar al elemento la posibilidad de limpiar cosas como los event listeners. Después de eso, se llama a `connectedCallback` del elemento` t_fendt` recién creado.
 
 Otra opción más eficaz es simplemente actualizar el atributo `sku` en el elemento existente.
 
@@ -104,7 +104,7 @@ Otra opción más eficaz es simplemente actualizar el atributo `sku` en el eleme
 
 Si el equipo de producto usara un motor de plantillas que detecta diferencias de DOM, como React, el algoritmo lo haría automáticamente.
 
-![Cambio de atributo de Custom Element](./ressources/video/custom-element-attribute.gif)
+<img alt="Cambio de atributo de Custom Element" src="./ressources/video/custom-element-attribute.gif" loading="lazy" />
 
 Para respaldar esto, el Custom Element puede implementar `attributeChangedCallback` y especificar una lista de atributos observados en `observedAttributes` para los cuales se debe ejecutar este callback.
 
@@ -118,8 +118,7 @@ Para respaldar esto, el Custom Element puede implementar `attributeChangedCallba
       static get observedAttributes() {
         return ['sku'];
       }
-      constructor() {
-        super();
+      connectedCallback() {
         this.render();
       }
       render() {
@@ -134,15 +133,21 @@ Para respaldar esto, el Custom Element puede implementar `attributeChangedCallba
     }
     window.customElements.define('blue-buy', BlueBuy);
 
-Para evitar la duplicidad, se introduce un método `render()` que se llama desde `constructor` y` attributeChangedCallback`. Este método recopila los datos necesarios y el nuevo html que se asigna a innerHTML. Si se decide ir con un motor de plantillas o un framework más sofisticado dentro del custom element, aquí es donde va la inialización de este.
+Para evitar la duplicidad, se introduce un método `render()` que se llama desde `connectedCallback` y` attributeChangedCallback`. Este método recopila los datos necesarios y el nuevo html que se asigna a innerHTML. Si se decide ir con un motor de plantillas o un framework más sofisticado dentro del custom element, aquí es donde va la inialización de este.
 
 ### Soporte en navegador
 
-El ejemplo anterior utiliza la especificación Custom Element V1 que actualmente está [soportada en Chrome, Safari y Opera](http://caniuse.com/#feat=custom-elementsv1). Pero con [document-register-element](https://github.com/WebReflection/document-register-element) hay disponible un polyfill ligero y probado en la batalla para que  funcione en todos los navegadores. Bajo el capó, utiliza la API de Mutation Observer [ampliamente soportada](http://caniuse.com/#feat=mutationobserver), por lo que no hay operaciones raras en árbol del DOM en segundo plano.
+El ejemplo anterior utiliza la especificación Custom Element V1 que actualmente está [soportada en todos los navegadores](http://caniuse.com/#feat=custom-elementsv1). No son necesarios pollyfils or hacks de ningún tipo.
 
 ### Framework de Compatibilidad
 
-Debido a que los custom elements son un estándar web, todos los frameworks principales de JavaScript como Angular, React, Preact, Vue o Hyperapp los soportan. Pero cuando entras en detalle, todavía hay algunos problemas de implementación en algunos frameworks. En [Custom Elements Everywhere](https://custom-elements-everywhere.com/) [Rob Dodson](https://twitter.com/rob_dodson) ha reunido un conjunto de pruebas de compatibilidad que destaca los problemas no resueltos.
+Debido a que los custom elements son un estándar web, todos los frameworks principales de JavaScript como React, Vue Angular, Svelte o Preact los soportan.
+Permiten embeber un Custom Element en tu aplicación de la misma manera que una etiqueta HTML nativa, y también ofrecen formas de publicar tu aplicación como un Custom Element.
+
+### Evitar la Anarquia de Frameworks
+
+Usar Custom Elements es una manera genial de lograr un gran desacoplamiento entre los fragmentos de los equipos individuales. De esta manera, cada equipo es libre de elegir el framework que prefiera. Pero sólo porque puedas hacerlo no significa que sea una buena idea mezclar diferentes tecnologías. Intenta evitar la [Anarquía de microfrontends](https://www.thoughtworks.com/radar/techniques/micro-frontend-anarchy) y crea un nivel razonable de alineamiento entre los distintos equipos. De esta manera, los equipos pueden compartir conocimiento y buenas prácticas. También te hará la vida más fácil cuando quieras establecer una biblioteca de patrones central.
+Dicho esto, la capacidad de combinar tecnologías puede resultar útil cuando se trabaja con una aplicación heredada (legacy) y se desea migrar a una nueva stack tecnológica.
 
 ### Comunicación padre-hijo (o hermanos) / eventos de DOM
 
@@ -197,9 +202,9 @@ Con este enfoque el fragmento de la mini cesta agrega un oyente a un elemento DO
       $('blue-basket')[0].refresh();
     });
 
-Llamada imperativa a los métodos DOM es bastante poco común, pero se puede encontrar en [video element api](https://developer.mozilla.org/de/docs/Web/HTML/Using_HTML5_audio_and_video#Controlling_media_playback) por ejemplo. Si es posible se debería hacer uso de un enfoque declarativo (cambio de atributo).
+Llamada imperativa a los métodos DOM es bastante poco común, pero se puede encontrar en [video element api](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement#methods) por ejemplo. Si es posible se debería hacer uso de un enfoque declarativo (cambio de atributo).
 
-## Renderizado en servidor / Renderizado Universal
+## Renderizado en servidor / Renderizado Universal (SSR)
 
 Los Custom Elements son excelentes para integrar componentes dentro del navegador. Pero cuando se construye un site, es probable que la velocidad de carga inicial sea importante y que los usuarios vean una pantalla en blanco hasta que se descarguen y ejecuten todos los frameworks JS. Además, es bueno pensar qué pasa con el sitio si el JavaScript falla o está bloqueado. [Jeremy Keith](https://adactio.com/) explica la importancia de su libro/podcast [Resilient Web Design](https://resilientwebdesign.com/). Por lo tanto, la capacidad de renderizar el contenido en el servidor es clave. Lamentablemente, la especificación de componentes web no habla en absoluto renderizado en servidor. Sin JavaScript no hay Custom Elements :(
 
@@ -290,9 +295,9 @@ Una posible solución sería que el equipo rojo solo omita el SSI Include.
 
     <green-recos sku="t_porsche"></green-recos>
 
-*Nota importante: Custom Elements [no puede cerrarse en un solo tag](https://developers.google.com/web/fundamentals/architecture/building-components/customelements#jsapi), por lo que `<green-recos sku="t_porsche" />` no funciona correctamente.*
+*Nota importante: Custom Elements [no puede cerrarse en un solo tag](https://developers.google.com/web/fundamentals/web-components/customelements), por lo que `<green-recos sku="t_porsche" />` no funciona correctamente.*
 
-<img alt="Reflow" src="./ressources/video/data-fetching-reflow.gif" style="width: 500px" />
+<img alt="Reflow" src="./ressources/video/data-fetching-reflow.gif" style="width: 500px" loading="lazy" />
 
 El renderizado solo tiene lugar en el navegador.
 Pero, como se puede ver en la animación, este cambio ahora ha introducido un __reflow importante__ de la página.
@@ -315,7 +320,7 @@ Además, el equipo verde cambia el __método de render en el servidor__ de su fr
 El __skeleton markup__ puede reutilizar partes de los estilos de diseño del contenido real.
 De esta manera, __reserva el espacio necesario__ y el relleno del contenido real no produce salto.
 
-<img alt="Skeleton Screen" src="./ressources/video/data-fetching-skeleton.gif" style="width: 500px" />
+<img alt="Skeleton Screen" src="./ressources/video/data-fetching-skeleton.gif" style="width: 500px" loading="lazy"/>
 
 Los __skeleton__ también son __muy útiles para la representación del cliente__.
 Cuando un custom element se inserta en el DOM por una acción del usuario, puede __instantáneamente representar skeleton__ hasta que lleguen los datos que necesita del servidor.
@@ -335,6 +340,7 @@ Puede ver el [Repo en Github](https://github.com/neuland/micro-frontends) para m
 
 
 ## Recursos adicionales
+- [Libro: Micro Frontends in Action](https://www.manning.com/books/micro-frontends-in-action?a_aid=mfia&a_bid=5f09fdeb) Escrito por Michael Geers.
 - [Charla: Micro Frontends - Web Rebels, Oslo 2018](https://www.youtube.com/watch?v=dTW7eJsIHDg) ([Slides](https://noti.st/naltatis/HxcUfZ/micro-frontends-think-smaller-avoid-the-monolith-love-the-backend))
 - [Slides: Micro Frontends - JSUnconf.eu 2017](https://speakerdeck.com/naltatis/micro-frontends-building-a-modern-webapp-with-multiple-teams)
 - [Charla: Break Up With Your Frontend Monolith - JS Kongress 2017](https://www.youtube.com/watch?v=W3_8sxUurzA) Elisabeth Engel habla sobre implementacion de Micro Frontends en gutefrage.net
@@ -373,5 +379,11 @@ Puede ver el [Repo en Github](https://github.com/neuland/micro-frontends) para m
 ## Colaboradores
 - [Jorge Beltrán](https://github.com/scipion) colaborador traducción y correcciones a [Español](https://micro-frontends-es.org).
 - [Koike Takayuki](https://github.com/koiketakayuki) quien tradujo el sitio a [Japonés](https://micro-frontends-japanese.org/).
+- [Bruno Carneiro](https://github.com/Tautorn) quien tradujo el sitio al [portugués](https://tauton.github.io/micro-frontends/).
+- [Soobin Bak](https://github.com/soobing) quien tradujo el sitio al [coreano](https://soobing.github.io/micro-frontends/).
+- [Sergei Babin](https://github.com/serzn1) quien tradujo el sitio al [ruso](https://serzn1.github.io/micro-frontends/).
+- [Shiwei Yang](https://github.com/swearer23) quien tradujo el sitio al [chino](https://swearer23.github.io/micro-frontends/).
+- [Riccardo Moschetti](https://github.com/RiccardoGMoschetti) quien tradujo el sitio al [italiano](https://riccardogmoschetti.github.io/micro-frontends/).
+- [Dominik Czechowski](https://github.com/dominikcz) quien tradujo el sitio al [polaco](https://dominikcz.github.io/micro-frontends/).
 
 Este sitio es generado por Github Pages. Su fuente se puede encontrar en español en [scipion/micro-frontends](https://github.com/scipion/micro-frontends/), o en el sitio original en [neuland/micro-frontends](https://github.com/neuland/micro-frontends/).
